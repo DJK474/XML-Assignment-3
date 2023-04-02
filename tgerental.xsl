@@ -4,8 +4,11 @@
 
 <xsl:stylesheet version="2.0"
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+     <xsl:variable name="rentdocs" select="document('tgerentals.xml')"/>
+     
+    
 
-	
+
    <xsl:output method="html"
       doctype-system="about:legacy-compat"
       encoding="UTF-8"
@@ -36,9 +39,15 @@
    
    <xsl:template match="customer">
    <table class="head" cellpadding="2">
-   document("tgerentals.xml")
-   <xsl:variable name="Tool" select="document('tgerentals.xml')/>
-
+   <xsl:variable name="IDValue" select="@custID"/>
+   <xsl:variable name="custInfo" select="doc('tgecustomers.xml')/customers/customer[@custID=$IDValue]"/>
+  <!-- <xsl:variable name="Tinfo" select="$custInfo"/> -->
+ 
+   <xsl:variable name="ToolID" select="doc('tgerentals.xml')/rentals/rental[Customer = $IDValue]"/>
+   <xsl:variable name="Tinfo" select="doc('tgetools.xml')/equipment/tool"/>
+   <xsl:variable name="ToolInfo" select="doc('tgetools.xml')/equipment/tool[@toolID = $ToolID/Tool]"/>
+   
+   
 		<tr>
 			<th>Customer</th>
 			<th>Tool ID</th>
@@ -55,11 +64,32 @@
 			<xsl:value-of select="street"/> <br/>
 			<xsl:value-of select="city"/>, <xsl:value-of select="state"/> <xsl:text> </xsl:text> <xsl:value-of select="ZIP"/>
 			</td>
-		</tr>
 			
 			<td>
-				<xsl:variable name="Tool" select="document(tgerentals.xml)/Tool"/>
+				<xsl:value-of select="$ToolID/Tool"/>
 			</td>
+			
+			<td>
+				<xsl:value-of select="$ToolInfo/description"/>
+			</td>
+			
+			<td>
+				<xsl:value-of select="$ToolInfo/category"/>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+			<xsl:value-of select="$custInfo/firstName"/> <br/>
+			<xsl:value-of select="$ToolID/Tool"/> <br/>
+			<!--<xsl:value-of select="$Tinfo"/> <br/>-->
+			<xsl:value-of select="$ToolInfo/description"/> <br/>
+			<xsl:value-of select="$ToolInfo/category"/> <br/>
+			<xsl:value-of select="format-date($ToolID/Start_Date, '[M]/[D]/[Y]')" />
+				
+			</td>
+		</tr>
+		
 				
 			</table>
    
